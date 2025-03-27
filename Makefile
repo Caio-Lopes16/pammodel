@@ -3,7 +3,7 @@
 pammodel.o: pammodel.c
 	gcc -fPIC -fno-stack-protector -c pammodel.c
 
-install: pam_skel_log.o
+install: pammodel.o
 	ld -x --shared -o /lib64/security/pammodel.so pammodel.o
 
 uninstall:
