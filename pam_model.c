@@ -59,8 +59,8 @@ int pam_sm_authenticate(pam_handle_t *pamh, int flags, int argc, const char **ar
     input[strcspn(input, "\n")] = '\0';
 
     // Libera a memória alocada para a resposta
-    free(resp->resp);
-    free(resp);
+    //free(resp->resp);
+    //free(resp);
 
     // Verifica se a data inserida está correta
     if (strcmp(input, correct_date) == 0)
