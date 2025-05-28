@@ -35,19 +35,19 @@ int pam_sm_authenticate(pam_handle_t *pamh, int flags, int argc, const char **ar
     // Obtém o método de conversação do PAM
     if (pam_get_item(pamh, PAM_CONV, (const void **)&conv) != PAM_SUCCESS || !conv || !conv->conv)
     {
-        pam_syslog(pamh, LOG_ERR, "Erro ao obter o método de conversação do PAM.");
+        pam_syslog(pamh, LOG_ERR, "Erro ao obter o metodo de conversacao do PAM.");
         return PAM_AUTH_ERR;
     }
 
     // Solicita a data ao usuário
-    const char *msg = "Insira a data de hoje para a verificação (DDMMAAAA): ";
+    const char *msg = "\nInsira a data de hoje para a verificacao de duas etapas (DDMMAAAA): ";
     const struct pam_message msg_struct = { PAM_PROMPT_ECHO_ON, msg };
     const struct pam_message *msg_arr[] = { &msg_struct };
 
     int retval = conv->conv(1, msg_arr, &resp, conv->appdata_ptr);
     if (retval != PAM_SUCCESS || !resp || !resp->resp)
     {
-        pam_syslog(pamh, LOG_ERR, "Falha ao obter resposta do usuário.");
+        pam_syslog(pamh, LOG_ERR, "Falha ao obter resposta do usuario.");
         return PAM_AUTH_ERR;
     }
 
@@ -58,19 +58,15 @@ int pam_sm_authenticate(pam_handle_t *pamh, int flags, int argc, const char **ar
     // Remove possíveis quebras de linha no final da entrada
     input[strcspn(input, "\n")] = '\0';
 
-    // Libera a memória alocada para a resposta
-    //free(resp->resp);
-    //free(resp);
-
     // Verifica se a data inserida está correta
     if (strcmp(input, correct_date) == 0)
     {
-        pam_syslog(pamh, LOG_NOTICE, "Autenticação bem-sucedida.");
+        pam_syslog(pamh, LOG_NOTICE, "Autenticacao bem-sucedida.");
         return PAM_SUCCESS;
     }
     else
     {
-        pam_syslog(pamh, LOG_NOTICE, "Falha na autenticação: Data incorreta.");
+        pam_syslog(pamh, LOG_NOTICE, "Falha na autenticacao: Data incorreta.");
         return PAM_AUTH_ERR;
     }
 }
