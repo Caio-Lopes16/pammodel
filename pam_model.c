@@ -61,11 +61,19 @@ int pam_sm_authenticate(pam_handle_t *pamh, int flags, int argc, const char **ar
     // Verifica se a data inserida está correta
     if (strcmp(input, correct_date) == 0)
     {
+        const struct pam_message success_msg = { PAM_TEXT_INFO, "Autenticacao bem-sucedida." };
+        const struct pam_message *success_arr[] = { &success_msg };
+        conv->conv(1, success_arr, &resp, conv->appdata_ptr);
+
         pam_syslog(pamh, LOG_NOTICE, "Autenticacao bem-sucedida.");
         return PAM_SUCCESS;
     }
     else
     {
+        const struct pam_message fail_msg = { PAM_TEXT_INFO, "Falha na autenticacao: Data incorreta." };
+        const struct pam_message *fail_arr[] = { &fail_msg };
+        conv->conv(1, fail_arr, &resp, conv->appdata_ptr);
+
         pam_syslog(pamh, LOG_NOTICE, "Falha na autenticacao: Data incorreta.");
         return PAM_AUTH_ERR;
     }
